@@ -22,23 +22,23 @@ Traditional attempts at AI-driven CAD fail for three main reasons:
 
 ```mermaid
 flowchart TD
-    subgraph Input Phase
+    subgraph SG_IN ["Input Phase"]
         Prompt["Natural Language Prompt"] --> InputRouter{"Input Router"}
         Drawing["2D Blueprint Image"] --> Vision["Vision Specialist (vision_analyzer.py)"]
         Vision --> InputRouter
     end
 
-    subgraph Planning Phase
+    subgraph SG_PLAN ["Planning Phase"]
         InputRouter --> LLM["Senior CAD Agent (agent_prompt.py)"]
         LLM --> RawPlan["Raw JSON Plan"]
     end
 
-    subgraph Guardrail Phase
+    subgraph SG_GUARD ["Guardrail Phase"]
         RawPlan --> Stage1["Stage 1: Pydantic Schema Validator (cad_schema.py)"]
         Stage1 --> Stage2["Stage 2: Headless Static CAD Simulator (cad_simulator.py)"]
     end
 
-    subgraph Execution & Healing Phase
+    subgraph SG_EXEC ["Execution and Healing Phase"]
         Stage2 --> Executor["CAD Executor (cad_executor.py)"]
         Executor --> LiveEngine["SolidWorksCADEngine (cad_engine.py)"]
         LiveEngine --> SW["SOLIDWORKS 2024 / 2025 / 2026"]

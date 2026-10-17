@@ -30,21 +30,21 @@ flowchart TD
     User["User Prompt / 2D Blueprint"] --> GUI["Desktop UI (SolidAI_GUI.py)"]
     GUI --> Coordinator["Agent Coordinator (cad_executor.py / vision_analyzer.py)"]
     
-    subgraph AI Engine Layer
+    subgraph SG1 ["AI Engine Layer"]
         Coordinator -->|Cloud Multi-View Reasoning| Gemini["Google Gemini (2.5 Flash / Pro)"]
         Coordinator -->|Local Offline Mode| Ollama["Ollama (Qwen2.5-Coder)"]
     end
     
-    subgraph Verification & Guardrails
+    subgraph SG2 ["Verification and Guardrails"]
         Gemini --> Schema["1. Pydantic Schema Validation (cad_schema.py)"]
         Ollama --> Schema
         Schema --> Sim["2. Headless CAD Dry-Run Simulator (cad_simulator.py)"]
     end
     
-    subgraph Execution & Live CAD Layer
+    subgraph SG3 ["Execution and Live CAD Layer"]
         Sim --> LiveEngine["3. SolidWorksCADEngine (cad_engine.py)"]
         Sim -.->|Headless CI / Testing| MockEngine["MockCADEngine (mock_engine.py)"]
-        LiveEngine --> SW["SOLIDWORKS 2024 / 2025 / 2026\n(Native Parametric 3D Solid Model)"]
+        LiveEngine --> SW["SOLIDWORKS (Native Parametric 3D Model)"]
         LiveEngine -.->|COM Error / Geometry Anomaly| Coordinator
     end
 ```
